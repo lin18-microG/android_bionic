@@ -104,6 +104,17 @@ libc_scudo_product_variables = {
     },
 }
 
+libc32_scudo_product_variables = {
+    malloc_not_svelte_libc32: {
+        cflags: ["-DUSE_SCUDO"],
+        whole_static_libs: ["libscudo"],
+        exclude_static_libs: [
+            "libjemalloc5",
+            "libc_jemalloc_wrapper",
+        ],
+    },
+}
+
 // Defaults for native allocator libs/includes to make it
 // easier to change.
 // To disable scudo for the non-svelte config remove the line:
@@ -115,12 +126,7 @@ cc_defaults {
     whole_static_libs: ["libc_jemalloc_wrapper"],
     multilib: {
         lib32: {
-            cflags: ["-DUSE_SCUDO"],
-            whole_static_libs: ["libscudo"],
-            exclude_static_libs: [
-                "libjemalloc5",
-                "libc_jemalloc_wrapper",
-            ],
+            product_variables: libc32_scudo_product_variables,
         },
         lib64: {
             cflags: ["-DH_MALLOC_PREFIX"],
